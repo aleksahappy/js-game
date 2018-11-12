@@ -128,7 +128,7 @@ class Level {
   }
   
   removeActor(actor) {
-    const index = this.actors.findIndex(item => item === actor);
+    const index = this.actors.indexOf(actor);
     if (index !== -1) {
       this.actors.splice(index, 1);
     }
@@ -173,11 +173,7 @@ class LevelParser {
   }
 
   createGrid(plan) {
-    return plan.map(rowPlan => {
-      return rowPlan.split('').map(obstacleSymbol => {
-        return this.obstacleFromSymbol(obstacleSymbol);
-      })
-    })
+    return plan.map(rowPlan => rowPlan.split('').map(obstacleSymbol => this.obstacleFromSymbol(obstacleSymbol)));
   }
 
   createActors(plan) {
