@@ -104,34 +104,34 @@ class Level {
     if (!(position instanceof Vector) && !(size instanceof Vector)) {
       throw new Error(`Переданное значение не является объетом типа Vector`);
     }
-    const actor = new Actor(position, size);
-    
-    if (actor.bottom > this.height) {
+
+    if ((position.y + size.y) > this.height) {
       return 'lava';
     }
-    if (actor.top < 0 || actor.left < 0 || actor.right > this.width) {
+    if (position.y < 0 || position.x < 0 || (position.x + size.x) > this.width) {
       return 'wall';
     }
 
-    const actorTop = Math.floor(actor.top);
-    const actorBottom = Math.ceil(actor.bottom);
-    const actorLeft = Math.floor(actor.left);
-    const actorRight = Math.ceil(actor.right);
+    const actorTop = Math.floor(position.y);
+    const actorBottom = Math.ceil(position.y + size.y);
+    const actorLeft = Math.floor(position.x);
+    const actorRight = Math.ceil(position.x + size.x);
 
     for (let y = actorTop; y < actorBottom; y++) {
       for (let x = actorLeft; x < actorRight; x++) {
-        if (this.grid[y][x] !== undefined) return this.grid[y][x];
+        const obstacle = this.grid[y][x];
+        if (obstacle) {
+          return obstacle;
+        }
       }
     }
-    return undefined;
   }
   
   removeActor(actor) {
-    this.actors.forEach((item, index) => {
-      if (item === actor) {
-        this.actors.splice(index, 1);
-      }
-    })
+    const index = this.actors.findIndex(item => item === actor);
+    if (index !== -1) {
+      this.actors.splice(index, 1);
+    }
   }
   
   noMoreActors(type) {
